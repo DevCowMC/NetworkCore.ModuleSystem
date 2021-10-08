@@ -1,0 +1,5 @@
+name: ChatModule
+version: '${version}'
+author: DevCow
+main: net.devcowsoftware.networkcore.chat.bungee.core.Chat
+dependencies: [NetworkCore-Core]

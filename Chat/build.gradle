@@ -1,0 +1,62 @@
+plugins {
+    id 'com.github.johnrengelman.shadow'
+    id 'java'
+}
+
+group = 'net.devcow-software.networkcore'
+version = '0.0.0-DEV'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'DevCow'
+        url = 'https://repos.devcow-software.net/repository/DevCow/'
+    }
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+}
+
+dependencies {
+    api project(":Core")
+    compileOnly('net.spigotmc:spigot-api:1.17')
+    compileOnly('org.md5:Bungeecord:1.17')
+    implementation('co.aikar:paper:latest')
+    implementation('co.aikar:bungeecord:latest')
+}
+
+def targetJavaVersion = 8
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release = targetJavaVersion
+    }
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('Spigot-Module.yml') {
+        expand props
+    }
+    filesMatching('Bungee-Module.yml') {
+        expand props
+    }
+}
+
+shadowJar {
+    relocate 'co.aikar.commands', 'net.devcowsoftware.networkcore.chat.acf'
+    relocate 'co.aikar.locales', 'net.devcowsoftware.networkcore.chat.locales'
+}
+
+build.dependsOn shadowJar

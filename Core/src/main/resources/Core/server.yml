@@ -1,0 +1,10 @@
+#################################################################################################
+#
+# NetworkCore Core
+# Server Information used across all plugins
+# Color Codes is Supported
+# Hex Colors are not Supported yet
+#
+#################################################################################################
+
+ServerName: "&6Server Name"
